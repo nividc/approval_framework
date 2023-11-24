@@ -1,0 +1,51 @@
+{% extends 'layout.html' %}
+
+{% block title %}Approval Framework{% endblock %}
+
+{% block content %}
+    <h1>Approval Requests</h1>
+    
+    <form action="{{ url_for('create_approval') }}" method="post">
+        <label for="header">Header:</label>
+        <input type="text" name="header" required>
+        
+        <label for="value">Value:</label>
+        <input type="number" name="value" required>
+        
+        <label for="approval_type">Approval Type:</label>
+        <input type="text" name="approval_type" required>
+        
+        <button type="submit">Submit Approval</button>
+    </form>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Header</th>
+                <th>Value</th>
+                <th>Approval Type</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for approval in approvals %}
+                <tr>
+                    <td>{{ approval.header }}</td>
+                    <td>{{ approval.value }}</td>
+                    <td>{{ approval.approval_type }}</td>
+                    <td>{{ approval.status }}</td>
+                    <td>
+                        <form action="{{ url_for('submit_approval', approval_id=approval.id) }}" method="post">
+                            <input type="hidden" name="user" value="Aarav">
+                            <label for="comment">Comment:</label>
+                            <input type="text" name="comment" required>
+                            <button type="submit">Approve</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
