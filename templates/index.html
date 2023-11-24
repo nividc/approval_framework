@@ -1,51 +1,41 @@
-{% extends 'layout.html' %}
+<!-- templates/index.html -->
 
-{% block title %}Approval Framework{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Approval Workflow</title>
+</head>
+<body>
+    <h1>Approval Workflow</h1>
 
-{% block content %}
-    <h1>Approval Requests</h1>
-    
-    <form action="{{ url_for('create_approval') }}" method="post">
+    <h2>Approvals</h2>
+    <ul>
+        {% for approval in approvals %}
+            <li>
+                {{ approval.header }} - {{ approval.value }} ({{ approval.approval_type }}) - Status: {{ approval.status }}
+                <ul>
+                    {% for comment in approval.comments %}
+                        <li>{{ comment.user }}: {{ comment.comment }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <h2>Create Approval</h2>
+    <form action="{{ url_for('submit_approval') }}" method="post">
         <label for="header">Header:</label>
-        <input type="text" name="header" required>
-        
+        <input type="text" id="header" name="header" required><br>
+
         <label for="value">Value:</label>
-        <input type="number" name="value" required>
-        
+        <input type="text" id="value" name="value" required><br>
+
         <label for="approval_type">Approval Type:</label>
-        <input type="text" name="approval_type" required>
-        
+        <input type="text" id="approval_type" name="approval_type" required><br>
+
         <button type="submit">Submit Approval</button>
     </form>
-    
-    <table>
-        <thead>
-            <tr>
-                <th>Header</th>
-                <th>Value</th>
-                <th>Approval Type</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for approval in approvals %}
-                <tr>
-                    <td>{{ approval.header }}</td>
-                    <td>{{ approval.value }}</td>
-                    <td>{{ approval.approval_type }}</td>
-                    <td>{{ approval.status }}</td>
-                    <td>
-                        <form action="{{ url_for('submit_approval', approval_id=approval.id) }}" method="post">
-                            <input type="hidden" name="user" value="Aarav">
-                            <label for="comment">Comment:</label>
-                            <input type="text" name="comment" required>
-                            <button type="submit">Approve</button>
-                        </form>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-{% endblock %}
-
+</body>
+</html>
